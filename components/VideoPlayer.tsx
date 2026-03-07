@@ -11,9 +11,13 @@ interface VideoPlayerProps {
   autoPlay?: boolean;
   onProgress?: (progress: number) => void;
   onDuration?: (duration: number) => void;
+  hasNextEpisode?: boolean;
+  hasPrevEpisode?: boolean;
+  onNextEpisode?: () => void;
+  onPrevEpisode?: () => void;
 }
 
-export const VideoPlayer = ({ src, isEmbed, poster, autoPlay = false, onProgress, onDuration }: VideoPlayerProps) => {
+export const VideoPlayer = ({ src, isEmbed, poster, autoPlay = false, onProgress, onDuration, hasNextEpisode, hasPrevEpisode, onNextEpisode, onPrevEpisode }: VideoPlayerProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -284,7 +288,7 @@ export const VideoPlayer = ({ src, isEmbed, poster, autoPlay = false, onProgress
           </div>
 
           {/* Progress Bar */}
-          <div className="px-4 pb-4">
+          <div className="px-4 pb-2">
             <div className="relative w-full h-1 bg-white/30 cursor-pointer group" onClick={(e) => {
               const rect = e.currentTarget.getBoundingClientRect();
               const pos = (e.clientX - rect.left) / rect.width;
@@ -299,6 +303,28 @@ export const VideoPlayer = ({ src, isEmbed, poster, autoPlay = false, onProgress
               />
             </div>
           </div>
+
+          {/* Episode Navigation */}
+          {(hasNextEpisode !== undefined || hasPrevEpisode !== undefined) && (
+            <div className="flex items-center justify-between px-4 pb-4">
+              <button 
+                onClick={(e) => { e.stopPropagation(); onPrevEpisode?.(); }} 
+                disabled={!hasPrevEpisode} 
+                className={`flex items-center gap-2 text-xs md:text-sm font-medium transition ${hasPrevEpisode ? 'text-white hover:text-[#00FF00]' : 'text-gray-500 cursor-not-allowed'}`}
+              >
+                <SkipBack className="w-4 h-4 md:w-5 md:h-5" />
+                Previous Episode
+              </button>
+              <button 
+                onClick={(e) => { e.stopPropagation(); onNextEpisode?.(); }} 
+                disabled={!hasNextEpisode} 
+                className={`flex items-center gap-2 text-xs md:text-sm font-medium transition ${hasNextEpisode ? 'text-white hover:text-[#00FF00]' : 'text-gray-500 cursor-not-allowed'}`}
+              >
+                Next Episode
+                <SkipForward className="w-4 h-4 md:w-5 md:h-5" />
+              </button>
+            </div>
+          )}
         </div>
       </div>
 

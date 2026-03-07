@@ -14,17 +14,32 @@ export interface WatchHistoryItem {
   duration: number;
 }
 
+export interface SavedItem {
+  id: string;
+  type: 'tv' | 'movie';
+  title: string;
+  posterPath: string | null;
+  timestamp: number;
+  voteAverage?: number;
+  releaseDate?: string;
+}
+
 interface WatchStore {
   history: WatchHistoryItem[];
+  myList: SavedItem[];
   addToHistory: (item: WatchHistoryItem) => void;
   removeFromHistory: (id: string) => void;
   getHistoryItem: (id: string) => WatchHistoryItem | undefined;
+  addToMyList: (item: SavedItem) => void;
+  removeFromMyList: (id: string) => void;
+  isInMyList: (id: string) => boolean;
 }
 
 export const useWatchStore = create<WatchStore>()(
   persist(
     (set, get) => ({
       history: [],
+      myList: [],
       addToHistory: (item) => set((state) => {
         const existingIndex = state.history.findIndex(h => h.id === item.id);
         const newHistory = [...state.history];
@@ -38,7 +53,15 @@ export const useWatchStore = create<WatchStore>()(
       removeFromHistory: (id) => set((state) => ({
         history: state.history.filter(h => h.id !== id)
       })),
-      getHistoryItem: (id) => get().history.find(h => h.id === id)
+      getHistoryItem: (id) => get().history.find(h => h.id === id),
+      addToMyList: (item) => set((state) => {
+        if (state.myList.some(i => i.id === item.id)) return state;
+        return { myList: [{ ...item, timestamp: Date.now() }, ...state.myList] };
+      }),
+      removeFromMyList: (id) => set((state) => ({
+        myList: state.myList.filter(i => i.id !== id)
+      })),
+      isInMyList: (id) => get().myList.some(i => i.id === id)
     }),
     {
       name: 'cinestream-watch-history'

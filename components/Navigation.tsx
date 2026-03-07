@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Search, Home, Filter, Heart } from 'lucide-react';
+import { Search, Home, Filter, Heart, Bookmark, User } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
 export const Navbar = () => {
@@ -9,7 +9,8 @@ export const Navbar = () => {
   const navItems = [
     { icon: Home, label: 'Home', href: '/' },
     { icon: Search, label: 'Search', href: '/search' },
-    { icon: Filter, label: 'Filter', href: '/filter' },
+    { icon: Bookmark, label: 'My List', href: '/my-list' },
+    { icon: User, label: 'Profile', href: '/profile' },
   ];
 
   return (
@@ -55,7 +56,8 @@ export const BottomNav = () => {
   const navItems = [
     { icon: Home, label: 'Home', href: '/' },
     { icon: Search, label: 'Search', href: '/search' },
-    { icon: Filter, label: 'Filter', href: '/filter' },
+    { icon: Bookmark, label: 'My List', href: '/my-list' },
+    { icon: User, label: 'Profile', href: '/profile' },
   ];
 
   return (

@@ -25,10 +25,30 @@ function AnimeDetailsContent() {
   const [activeServer, setActiveServer] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [showDataWarning, setShowDataWarning] = useState(true);
-  const [inList, setInList] = useState(false);
+  const [inListLocal, setInListLocal] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
-  const { addToHistory, getHistoryItem } = useWatchStore();
+  const { addToHistory, getHistoryItem, addToMyList, removeFromMyList, isInMyList } = useWatchStore();
+
+  const inList = isMounted ? isInMyList(id as string) : inListLocal;
+
+  const toggleList = () => {
+    if (inList) {
+      removeFromMyList(id as string);
+      setInListLocal(false);
+    } else {
+      addToMyList({
+        id: id as string,
+        type,
+        title: anime?.name || anime?.title || '',
+        posterPath: anime?.poster_path || null,
+        timestamp: Date.now(),
+        voteAverage: anime?.vote_average,
+        releaseDate: anime?.first_air_date || anime?.release_date
+      });
+      setInListLocal(true);
+    }
+  };
 
   useEffect(() => {
     const timer = setTimeout(() => setIsMounted(true), 0);
@@ -125,6 +145,21 @@ function AnimeDetailsContent() {
   const videoSrc = currentServer ? (typeof currentServer === 'string' ? currentServer : currentServer.url) : '';
   const isEmbed = currentServer && typeof currentServer !== 'string' && currentServer.isEmbed;
 
+  const hasNextEpisode = type === 'tv' && episodes.some(ep => ep.episode_number === selectedEpisode + 1);
+  const hasPrevEpisode = type === 'tv' && episodes.some(ep => ep.episode_number === selectedEpisode - 1);
+
+  const handleNextEpisode = () => {
+    if (hasNextEpisode) {
+      handleEpisodeChange(selectedEpisode + 1);
+    }
+  };
+
+  const handlePrevEpisode = () => {
+    if (hasPrevEpisode) {
+      handleEpisodeChange(selectedEpisode - 1);
+    }
+  };
+
   return (
     <main className="min-h-screen bg-black text-white pb-20 md:pb-0">
       <Navbar />
@@ -154,6 +189,10 @@ function AnimeDetailsContent() {
                   isEmbed={isEmbed} 
                   poster={getImageUrl(anime.backdrop_path, 'original')}
                   autoPlay={true}
+                  hasNextEpisode={type === 'tv' ? hasNextEpisode : undefined}
+                  hasPrevEpisode={type === 'tv' ? hasPrevEpisode : undefined}
+                  onNextEpisode={handleNextEpisode}
+                  onPrevEpisode={handlePrevEpisode}
                   onProgress={(p) => {
                     if (p > 5) { // Update history after 5% progress
                       addToHistory({
@@ -218,7 +257,7 @@ function AnimeDetailsContent() {
             </button>
 
             <button 
-              onClick={() => setInList(!inList)}
+              onClick={toggleList}
               className={`flex items-center gap-2 px-4 py-2 rounded-full transition whitespace-nowrap ${
                 inList ? 'bg-white text-black' : 'bg-white/10 hover:bg-white/20'
               }`}
