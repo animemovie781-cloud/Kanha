@@ -27,7 +27,6 @@ function AnimeDetailsContent() {
   const [showDataWarning, setShowDataWarning] = useState(true);
   const [inListLocal, setInListLocal] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-  const [isSeasonDropdownOpen, setIsSeasonDropdownOpen] = useState(false);
 
   const { addToHistory, getHistoryItem, addToMyList, removeFromMyList, isInMyList } = useWatchStore();
 
@@ -110,7 +109,6 @@ function AnimeDetailsContent() {
   const handleSeasonChange = async (seasonNum: number) => {
     setSelectedSeason(seasonNum);
     setSelectedEpisode(1);
-    setIsSeasonDropdownOpen(false);
     const seasonData = await getAnimeSeason(id as string, seasonNum);
     setEpisodes(seasonData.episodes || []);
   };
@@ -297,74 +295,71 @@ function AnimeDetailsContent() {
           </p>
         </div>
 
-        {/* Episodes Vertical List (YouTube Related Videos Style) */}
+        {/* Episodes Section */}
         {type === 'tv' && seasons.length > 0 && (
           <div className="mb-10">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold">Episodes</h2>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+              <h2 className="text-xl font-bold shrink-0">Episodes</h2>
               
-              <div className="relative">
-                <button 
-                  onClick={() => setIsSeasonDropdownOpen(!isSeasonDropdownOpen)}
-                  className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-lg hover:bg-white/20 transition text-sm font-medium"
-                >
-                  <span>Season {selectedSeason}</span>
-                  <ChevronDown className={`w-4 h-4 transition-transform ${isSeasonDropdownOpen ? 'rotate-180' : ''}`} />
-                </button>
-                
-                {isSeasonDropdownOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-48 bg-zinc-900 border border-white/10 rounded-xl shadow-2xl overflow-hidden z-50">
-                    <div className="max-h-64 overflow-y-auto hide-scrollbar">
-                      {seasons.map((s) => (
-                        <button
-                          key={s.id}
-                          onClick={() => handleSeasonChange(s.season_number)}
-                          className={`w-full text-left px-4 py-3 hover:bg-white/10 transition text-sm font-medium ${
-                            selectedSeason === s.season_number ? 'text-white bg-white/20' : 'text-gray-300'
-                          }`}
-                        >
-                          Season {s.season_number}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
+              {/* Season Pills */}
+              <div className="flex items-center gap-2 overflow-x-auto hide-scrollbar pb-2 md:pb-0 w-full md:w-auto">
+                {seasons.map((s) => (
+                  <button
+                    key={s.id}
+                    onClick={() => handleSeasonChange(s.season_number)}
+                    className={`px-5 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all ${
+                      selectedSeason === s.season_number 
+                        ? 'bg-white text-black shadow-[0_0_15px_rgba(255,255,255,0.3)]' 
+                        : 'bg-white/10 text-gray-300 hover:bg-white/20 hover:text-white'
+                    }`}
+                  >
+                    Season {s.season_number}
+                  </button>
+                ))}
               </div>
             </div>
 
-            <div className="flex flex-col gap-3">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {episodes.map((ep) => (
                 <button
                   key={ep.id}
                   onClick={() => handleEpisodeChange(ep.episode_number)}
-                  className={`flex gap-3 text-left group transition-all p-2 rounded-xl ${
+                  className={`flex gap-4 text-left group transition-all p-3 rounded-2xl border ${
                     selectedEpisode === ep.episode_number 
-                      ? 'bg-white/10' 
-                      : 'hover:bg-white/5'
+                      ? 'bg-white/10 border-white/20 shadow-lg' 
+                      : 'bg-white/5 border-transparent hover:bg-white/10'
                   }`}
                 >
-                  <div className="relative w-32 md:w-40 aspect-video bg-black rounded-lg overflow-hidden shrink-0">
-                    <Image
-                      src={getImageUrl(ep.still_path, 'original')}
-                      alt={ep.name}
-                      fill
-                      className="object-cover"
-                      referrerPolicy="no-referrer"
-                    />
-                    <div className="absolute bottom-1 right-1 bg-black/80 px-1.5 py-0.5 rounded text-[10px] font-mono font-medium">
+                  <div className="relative w-36 md:w-48 aspect-video bg-zinc-900 rounded-xl overflow-hidden shrink-0 shadow-md">
+                    {ep.still_path ? (
+                      <Image
+                        src={getImageUrl(ep.still_path, 'original')}
+                        alt={ep.name}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        referrerPolicy="no-referrer"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center bg-zinc-800">
+                        <span className="text-zinc-500 text-xs font-medium">No Image</span>
+                      </div>
+                    )}
+                    <div className="absolute bottom-1.5 right-1.5 bg-black/80 backdrop-blur-md px-1.5 py-0.5 rounded text-[10px] font-mono font-bold text-white">
                       E{ep.episode_number}
                     </div>
                     {selectedEpisode === ep.episode_number && (
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                        <Play className="w-6 h-6 text-white fill-current" />
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[1px]">
+                        <div className="w-10 h-10 bg-[#E50914] rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(229,9,20,0.5)]">
+                          <Play className="w-5 h-5 text-white fill-current ml-0.5" />
+                        </div>
                       </div>
                     )}
                   </div>
-                  <div className="flex flex-col py-1">
-                    <h4 className={`font-medium text-sm md:text-base line-clamp-2 mb-1 ${selectedEpisode === ep.episode_number ? 'text-white' : 'text-gray-200'}`}>
+                  <div className="flex flex-col justify-center py-1 overflow-hidden">
+                    <h4 className={`font-bold text-sm md:text-base line-clamp-2 mb-1.5 ${selectedEpisode === ep.episode_number ? 'text-[#E50914]' : 'text-white group-hover:text-[#E50914] transition-colors'}`}>
                       {ep.episode_number}. {ep.name}
                     </h4>
-                    <p className="text-xs text-gray-400 line-clamp-1">
+                    <p className="text-xs text-gray-400 line-clamp-2 leading-relaxed">
                       {ep.overview || 'No description available.'}
                     </p>
                   </div>
