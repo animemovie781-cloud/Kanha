@@ -193,6 +193,9 @@ function AnimeDetailsContent() {
                   hasPrevEpisode={type === 'tv' ? hasPrevEpisode : undefined}
                   onNextEpisode={handleNextEpisode}
                   onPrevEpisode={handlePrevEpisode}
+                  servers={servers}
+                  activeServer={activeServer}
+                  onServerChange={setActiveServer}
                   onProgress={(p) => {
                     if (p > 5) { // Update history after 5% progress
                       addToHistory({
@@ -276,10 +279,10 @@ function AnimeDetailsContent() {
               <button
                 key={key}
                 onClick={() => setActiveServer(key)}
-                className={`px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all ${
+                className={`px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all ${
                   activeServer === key 
-                    ? 'bg-white text-black' 
-                    : 'bg-white/10 text-white hover:bg-white/20'
+                    ? 'bg-[#E50914] text-white shadow-[0_0_15px_rgba(229,9,20,0.4)]' 
+                    : 'bg-white/10 text-gray-300 hover:bg-white/20 hover:text-white'
                 }`}
               >
                 {key.toUpperCase()}
@@ -319,18 +322,18 @@ function AnimeDetailsContent() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div className="flex flex-col gap-4">
               {episodes.map((ep) => (
                 <button
                   key={ep.id}
                   onClick={() => handleEpisodeChange(ep.episode_number)}
-                  className={`flex gap-4 text-left group transition-all p-3 rounded-2xl border ${
+                  className={`flex flex-col md:flex-row gap-4 text-left group transition-all p-4 rounded-xl border-b border-white/5 last:border-0 ${
                     selectedEpisode === ep.episode_number 
-                      ? 'bg-white/10 border-white/20 shadow-lg' 
-                      : 'bg-white/5 border-transparent hover:bg-white/10'
+                      ? 'bg-white/5' 
+                      : 'hover:bg-white/5'
                   }`}
                 >
-                  <div className="relative w-36 md:w-48 aspect-video bg-zinc-900 rounded-xl overflow-hidden shrink-0 shadow-md">
+                  <div className="relative w-full md:w-64 aspect-video bg-zinc-900 rounded-lg overflow-hidden shrink-0 shadow-md">
                     {ep.still_path ? (
                       <Image
                         src={getImageUrl(ep.still_path, 'original')}
@@ -344,22 +347,24 @@ function AnimeDetailsContent() {
                         <span className="text-zinc-500 text-xs font-medium">No Image</span>
                       </div>
                     )}
-                    <div className="absolute bottom-1.5 right-1.5 bg-black/80 backdrop-blur-md px-1.5 py-0.5 rounded text-[10px] font-mono font-bold text-white">
-                      E{ep.episode_number}
+                    <div className="absolute bottom-2 right-2 bg-black/80 backdrop-blur-md px-2 py-1 rounded text-xs font-medium text-white">
+                      {ep.runtime ? `${ep.runtime}m` : `E${ep.episode_number}`}
                     </div>
                     {selectedEpisode === ep.episode_number && (
                       <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[1px]">
-                        <div className="w-10 h-10 bg-[#E50914] rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(229,9,20,0.5)]">
-                          <Play className="w-5 h-5 text-white fill-current ml-0.5" />
+                        <div className="w-12 h-12 bg-black/60 border border-white/20 rounded-full flex items-center justify-center">
+                          <Play className="w-6 h-6 text-white fill-current ml-1" />
                         </div>
                       </div>
                     )}
                   </div>
-                  <div className="flex flex-col justify-center py-1 overflow-hidden">
-                    <h4 className={`font-bold text-sm md:text-base line-clamp-2 mb-1.5 ${selectedEpisode === ep.episode_number ? 'text-[#E50914]' : 'text-white group-hover:text-[#E50914] transition-colors'}`}>
-                      {ep.episode_number}. {ep.name}
-                    </h4>
-                    <p className="text-xs text-gray-400 line-clamp-2 leading-relaxed">
+                  <div className="flex flex-col py-1 flex-1">
+                    <div className="flex items-start justify-between gap-4 mb-2">
+                      <h4 className={`font-medium text-base md:text-lg line-clamp-1 ${selectedEpisode === ep.episode_number ? 'text-white' : 'text-gray-200 group-hover:text-white transition-colors'}`}>
+                        {ep.episode_number}. {ep.name}
+                      </h4>
+                    </div>
+                    <p className="text-sm text-gray-400 line-clamp-3 leading-relaxed">
                       {ep.overview || 'No description available.'}
                     </p>
                   </div>

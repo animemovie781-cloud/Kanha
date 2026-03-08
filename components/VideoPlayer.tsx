@@ -15,9 +15,12 @@ interface VideoPlayerProps {
   hasPrevEpisode?: boolean;
   onNextEpisode?: () => void;
   onPrevEpisode?: () => void;
+  servers?: Record<string, any>;
+  activeServer?: string | null;
+  onServerChange?: (serverKey: string) => void;
 }
 
-export const VideoPlayer = ({ src, isEmbed, poster, autoPlay = false, onProgress, onDuration, hasNextEpisode, hasPrevEpisode, onNextEpisode, onPrevEpisode }: VideoPlayerProps) => {
+export const VideoPlayer = ({ src, isEmbed, poster, autoPlay = false, onProgress, onDuration, hasNextEpisode, hasPrevEpisode, onNextEpisode, onPrevEpisode, servers, activeServer, onServerChange }: VideoPlayerProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -302,6 +305,26 @@ export const VideoPlayer = ({ src, isEmbed, poster, autoPlay = false, onProgress
                   </div>
                   
                   <div className="space-y-4">
+                    {servers && Object.keys(servers).length > 1 && (
+                      <div>
+                        <label className="text-xs text-gray-400 block mb-2">Server</label>
+                        <div className="grid grid-cols-2 gap-2">
+                          {Object.keys(servers).map(key => (
+                            <button
+                              key={key}
+                              onClick={() => {
+                                onServerChange?.(key);
+                                setShowSettings(false);
+                              }}
+                              className={`py-1.5 px-2 text-xs rounded border capitalize font-bold ${activeServer === key ? 'bg-[#E50914] text-white border-[#E50914] shadow-[0_0_10px_rgba(229,9,20,0.5)]' : 'border-white/20 text-white hover:bg-white/10'}`}
+                            >
+                              {key.toUpperCase()}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
                     <div>
                       <label className="text-xs text-gray-400 block mb-2">Aspect Ratio</label>
                       <div className="grid grid-cols-2 gap-2">
