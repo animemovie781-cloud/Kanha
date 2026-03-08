@@ -35,7 +35,7 @@ export default function SearchPage() {
   }, [debouncedQuery]);
 
   return (
-    <main className="min-h-screen bg-black text-white pb-20 md:pb-0 pt-20 md:pt-24">
+    <main className="min-h-screen bg-[#141414] text-white pb-20 md:pb-0 pt-20 md:pt-24 font-sans">
       <Navbar />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -46,7 +46,7 @@ export default function SearchPage() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search anime series or movies..."
-            className="w-full bg-white/10 border border-white/20 rounded-full py-4 pl-12 pr-12 text-white placeholder:text-gray-500 focus:outline-none focus:border-[#00FF00] focus:ring-1 focus:ring-[#00FF00] transition-all shadow-lg"
+            className="w-full bg-white/10 border border-white/20 rounded-full py-4 pl-12 pr-12 text-white placeholder:text-gray-500 focus:outline-none focus:border-[#E50914] focus:ring-1 focus:ring-[#E50914] transition-all shadow-lg"
           />
           {query && (
             <button
@@ -60,7 +60,7 @@ export default function SearchPage() {
 
         {loading && (
           <div className="flex justify-center mt-12">
-            <div className="w-8 h-8 border-2 border-[#00FF00] border-t-transparent rounded-full animate-spin" />
+            <div className="w-8 h-8 border-2 border-[#E50914] border-t-transparent rounded-full animate-spin" />
           </div>
         )}
 

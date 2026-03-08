@@ -18,12 +18,12 @@ export default function MyListPage() {
   if (!isMounted) return null;
 
   return (
-    <main className="min-h-screen bg-black text-white pb-20 md:pb-0 pt-20 md:pt-24">
+    <main className="min-h-screen bg-[#141414] text-white pb-20 md:pb-0 pt-20 md:pt-24 font-sans">
       <Navbar />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="flex items-center gap-3 mb-8 border-b border-white/10 pb-4">
-          <Bookmark className="w-8 h-8 text-[#00FF00]" />
+          <Bookmark className="w-8 h-8 text-[#E50914]" />
           <h1 className="text-2xl md:text-3xl font-bold">My List</h1>
         </div>
 

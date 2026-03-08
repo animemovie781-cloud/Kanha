@@ -67,16 +67,16 @@ export default function FilterPage() {
   }, [loading, hasMore, fetchMore]);
 
   return (
-    <main className="min-h-screen bg-black text-white pb-20 md:pb-0 pt-20 md:pt-24">
+    <main className="min-h-screen bg-[#141414] text-white pb-20 md:pb-0 pt-20 md:pt-24 font-sans">
       <Navbar />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="flex gap-4 mb-8 border-b border-white/10 pb-4 overflow-x-auto hide-scrollbar">
           <button
             onClick={() => setActiveTab('tv')}
-            className={`px-6 py-2.5 rounded-full font-bold whitespace-nowrap transition-all ${
+            className={`px-6 py-2.5 rounded font-bold whitespace-nowrap transition-all ${
               activeTab === 'tv' 
-                ? 'bg-[#00FF00] text-black shadow-[0_0_15px_rgba(0,255,0,0.3)]' 
+                ? 'bg-white text-black' 
                 : 'bg-white/10 text-white hover:bg-white/20'
             }`}
           >
@@ -84,9 +84,9 @@ export default function FilterPage() {
           </button>
           <button
             onClick={() => setActiveTab('movie')}
-            className={`px-6 py-2.5 rounded-full font-bold whitespace-nowrap transition-all ${
+            className={`px-6 py-2.5 rounded font-bold whitespace-nowrap transition-all ${
               activeTab === 'movie' 
-                ? 'bg-[#00FF00] text-black shadow-[0_0_15px_rgba(0,255,0,0.3)]' 
+                ? 'bg-white text-black' 
                 : 'bg-white/10 text-white hover:bg-white/20'
             }`}
           >
@@ -109,7 +109,7 @@ export default function FilterPage() {
 
         {loading && (
           <div className="flex justify-center mt-12 pb-8">
-            <div className="w-8 h-8 border-2 border-[#00FF00] border-t-transparent rounded-full animate-spin" />
+            <div className="w-8 h-8 border-2 border-[#E50914] border-t-transparent rounded-full animate-spin" />
           </div>
         )}
       </div>

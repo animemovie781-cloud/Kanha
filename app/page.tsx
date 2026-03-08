@@ -72,10 +72,10 @@ export default function Home() {
 
   if (error) {
     return (
-      <main className="min-h-screen bg-black text-white flex items-center justify-center">
+      <main className="min-h-screen bg-[#141414] text-white flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-500 mb-4">{error}</p>
-          <button onClick={() => window.location.reload()} className="bg-[#00FF00] text-black px-6 py-2 rounded-full font-bold">Retry</button>
+          <button onClick={() => window.location.reload()} className="bg-[#E50914] text-white px-6 py-2 rounded font-bold">Retry</button>
         </div>
       </main>
     );
@@ -83,8 +83,8 @@ export default function Home() {
 
   if (!data || !data.trending?.results?.length) {
     return (
-      <main className="min-h-screen bg-black text-white flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-[#00FF00] border-t-transparent rounded-full animate-spin" />
+      <main className="min-h-screen bg-[#141414] text-white flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-[#E50914] border-t-transparent rounded-full animate-spin" />
       </main>
     );
   }
@@ -103,16 +103,16 @@ export default function Home() {
   })) : [];
 
   return (
-    <main className="min-h-screen bg-black text-white pb-20 md:pb-0">
+    <main className="min-h-screen bg-[#141414] text-white pb-20 md:pb-0 font-sans">
       <Navbar />
       <Hero anime={heroAnime} />
       
-      <div className="-mt-10 sm:-mt-20 relative z-10 space-y-4 sm:space-y-8 md:space-y-12 pb-8">
+      <div className="-mt-20 sm:-mt-32 relative z-10 space-y-2 sm:space-y-4 md:space-y-6 pb-8">
         {continueWatchingItems.length > 0 && (
           <ContentRail title="Continue Watching" items={continueWatchingItems} />
         )}
         <ContentRail title="Trending Now" items={data.trending.results.slice(1)} />
-        <ContentRail title="Popular Anime" items={data.popular.results} />
+        <ContentRail title="Popular on Animeflix" items={data.popular.results} />
         <ContentRail title="Top Rated" items={data.topRated.results} />
         <ContentRail title="Anime Movies" items={data.movies.results} type="movie" />
         <ContentRail title="Recently Added" items={data.recentlyAdded.results} />

@@ -226,7 +226,7 @@ export const VideoPlayer = ({ src, isEmbed, poster, autoPlay = false, onProgress
       {/* Center Play Button Overlay */}
       {!isPlaying && !error && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/40 pointer-events-none">
-          <div className="w-16 h-16 bg-[#00FF00]/90 rounded-full flex items-center justify-center backdrop-blur-sm">
+          <div className="w-16 h-16 bg-[#E50914]/90 rounded-full flex items-center justify-center backdrop-blur-sm">
             <Play className="w-8 h-8 text-black ml-1 fill-current" />
           </div>
         </div>
@@ -310,7 +310,7 @@ export const VideoPlayer = ({ src, isEmbed, poster, autoPlay = false, onProgress
               <button 
                 onClick={(e) => { e.stopPropagation(); onPrevEpisode?.(); }} 
                 disabled={!hasPrevEpisode} 
-                className={`flex items-center gap-2 text-xs md:text-sm font-medium transition ${hasPrevEpisode ? 'text-white hover:text-[#00FF00]' : 'text-gray-500 cursor-not-allowed'}`}
+                className={`flex items-center gap-2 text-xs md:text-sm font-medium transition ${hasPrevEpisode ? 'text-white hover:text-[#E50914]' : 'text-gray-500 cursor-not-allowed'}`}
               >
                 <SkipBack className="w-4 h-4 md:w-5 md:h-5" />
                 Previous Episode
@@ -318,7 +318,7 @@ export const VideoPlayer = ({ src, isEmbed, poster, autoPlay = false, onProgress
               <button 
                 onClick={(e) => { e.stopPropagation(); onNextEpisode?.(); }} 
                 disabled={!hasNextEpisode} 
-                className={`flex items-center gap-2 text-xs md:text-sm font-medium transition ${hasNextEpisode ? 'text-white hover:text-[#00FF00]' : 'text-gray-500 cursor-not-allowed'}`}
+                className={`flex items-center gap-2 text-xs md:text-sm font-medium transition ${hasNextEpisode ? 'text-white hover:text-[#E50914]' : 'text-gray-500 cursor-not-allowed'}`}
               >
                 Next Episode
                 <SkipForward className="w-4 h-4 md:w-5 md:h-5" />
@@ -344,7 +344,7 @@ export const VideoPlayer = ({ src, isEmbed, poster, autoPlay = false, onProgress
               <select 
                 value={aspectRatio}
                 onChange={(e) => setAspectRatio(e.target.value)}
-                className="w-full bg-white/10 border border-white/20 rounded-lg p-2 text-sm text-white outline-none focus:border-[#00FF00]"
+                className="w-full bg-white/10 border border-white/20 rounded-lg p-2 text-sm text-white outline-none focus:border-[#E50914]"
               >
                 <option value="default">Default</option>
                 <option value="4:3">4:3</option>
@@ -360,7 +360,7 @@ export const VideoPlayer = ({ src, isEmbed, poster, autoPlay = false, onProgress
                   <button
                     key={deg}
                     onClick={() => setRotation(deg)}
-                    className={`p-1 text-xs rounded border ${rotation === deg ? 'bg-[#00FF00] text-black border-[#00FF00]' : 'border-white/20 text-white hover:bg-white/10'}`}
+                    className={`p-1 text-xs rounded border ${rotation === deg ? 'bg-[#E50914] text-white border-[#E50914]' : 'border-white/20 text-white hover:bg-white/10'}`}
                   >
                     {deg}°
                   </button>

@@ -133,8 +133,8 @@ function AnimeDetailsContent() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-black text-white flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-[#00FF00] border-t-transparent rounded-full animate-spin" />
+      <main className="min-h-screen bg-[#141414] text-white flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-[#E50914] border-t-transparent rounded-full animate-spin" />
       </main>
     );
   }
@@ -161,11 +161,11 @@ function AnimeDetailsContent() {
   };
 
   return (
-    <main className="min-h-screen bg-black text-white pb-20 md:pb-0">
+    <main className="min-h-screen bg-[#141414] text-white pb-20 md:pb-0 font-sans">
       <Navbar />
       
       {/* Sticky Player Section */}
-      <div className="sticky top-0 z-40 bg-black w-full shadow-2xl shadow-black/50">
+      <div className="sticky top-0 z-40 bg-[#141414] w-full shadow-2xl shadow-black/50">
         {showDataWarning ? (
           <div className="w-full aspect-video bg-zinc-900 flex flex-col items-center justify-center p-4 md:p-6 text-center max-w-5xl mx-auto md:rounded-2xl overflow-hidden md:mt-4">
             <AlertTriangle className="w-10 h-10 md:w-12 md:h-12 text-yellow-500 mb-3 md:mb-4" />
@@ -175,7 +175,7 @@ function AnimeDetailsContent() {
             </p>
             <button 
               onClick={() => setShowDataWarning(false)}
-              className="bg-[#00FF00] text-black px-6 md:px-8 py-2.5 md:py-3 rounded-full font-bold hover:bg-[#00cc00] transition-colors text-sm md:text-base"
+              className="bg-[#E50914] text-white px-6 md:px-8 py-2.5 md:py-3 rounded font-bold hover:bg-[#b20710] transition-colors text-sm md:text-base"
             >
               Continue to Player
             </button>
@@ -387,8 +387,8 @@ function AnimeDetailsContent() {
 export default function AnimeDetailsPage() {
   return (
     <Suspense fallback={
-      <main className="min-h-screen bg-black text-white flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-[#00FF00] border-t-transparent rounded-full animate-spin" />
+      <main className="min-h-screen bg-[#141414] text-white flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-[#E50914] border-t-transparent rounded-full animate-spin" />
       </main>
     }>
       <AnimeDetailsContent />
