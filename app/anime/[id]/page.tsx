@@ -181,8 +181,8 @@ function AnimeDetailsContent() {
             </button>
           </div>
         ) : (
-          <div className="w-full max-w-5xl mx-auto md:px-4 md:pt-4">
-            <div className="md:rounded-2xl overflow-hidden shadow-2xl bg-black">
+          <div className="w-full mx-auto">
+            <div className="md:rounded-none overflow-hidden shadow-2xl bg-black">
               {videoSrc ? (
                 <VideoPlayer 
                   src={videoSrc} 
@@ -220,7 +220,7 @@ function AnimeDetailsContent() {
         )}
       </div>
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-8 lg:px-12 py-4 md:py-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 py-4 md:py-6">
         {/* Title and Actions Section (YouTube Style) */}
         <div className="mb-6">
           <h1 className="text-xl md:text-2xl font-bold mb-2">
