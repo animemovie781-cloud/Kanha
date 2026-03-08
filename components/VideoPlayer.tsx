@@ -165,13 +165,17 @@ export const VideoPlayer = ({ src, isEmbed, poster, autoPlay = false, onProgress
     }, 3000);
   };
 
-  const getAspectRatioStyle = () => {
+  const getVideoStyle = () => {
     const baseStyle: any = { transform: `rotate(${rotation}deg) scale(${videoScale})` };
     switch (aspectRatio) {
-      case '4:3': return { ...baseStyle, objectFit: 'contain', aspectRatio: '4/3' };
-      case '16:9': return { ...baseStyle, objectFit: 'contain', aspectRatio: '16/9' };
-      case 'cover': return { ...baseStyle, objectFit: 'cover' };
-      default: return { ...baseStyle, objectFit: 'contain' };
+      case '4:3': 
+        return { ...baseStyle, objectFit: 'fill', width: 'auto', height: '100%', aspectRatio: '4/3', margin: '0 auto', display: 'block' };
+      case '16:9': 
+        return { ...baseStyle, objectFit: 'fill', width: '100%', height: '100%', aspectRatio: '16/9' };
+      case 'cover': 
+        return { ...baseStyle, objectFit: 'cover', width: '100%', height: '100%' };
+      default: 
+        return { ...baseStyle, objectFit: 'contain', width: '100%', height: '100%' };
     }
   };
 
@@ -205,8 +209,8 @@ export const VideoPlayer = ({ src, isEmbed, poster, autoPlay = false, onProgress
     >
       <video
         ref={videoRef}
-        className="w-full h-full transition-transform duration-300"
-        style={getAspectRatioStyle()}
+        className="transition-transform duration-300"
+        style={getVideoStyle()}
         poster={poster}
         onTimeUpdate={handleTimeUpdate}
         onEnded={() => setIsPlaying(false)}

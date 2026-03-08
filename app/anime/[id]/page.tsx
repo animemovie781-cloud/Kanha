@@ -27,6 +27,7 @@ function AnimeDetailsContent() {
   const [showDataWarning, setShowDataWarning] = useState(true);
   const [inListLocal, setInListLocal] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [isSeasonDropdownOpen, setIsSeasonDropdownOpen] = useState(false);
 
   const { addToHistory, getHistoryItem, addToMyList, removeFromMyList, isInMyList } = useWatchStore();
 
@@ -109,6 +110,7 @@ function AnimeDetailsContent() {
   const handleSeasonChange = async (seasonNum: number) => {
     setSelectedSeason(seasonNum);
     setSelectedEpisode(1);
+    setIsSeasonDropdownOpen(false);
     const seasonData = await getAnimeSeason(id as string, seasonNum);
     setEpisodes(seasonData.episodes || []);
   };
@@ -301,27 +303,32 @@ function AnimeDetailsContent() {
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold">Episodes</h2>
               
-              <div className="relative group">
-                <button className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-lg hover:bg-white/20 transition text-sm font-medium">
+              <div className="relative">
+                <button 
+                  onClick={() => setIsSeasonDropdownOpen(!isSeasonDropdownOpen)}
+                  className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-lg hover:bg-white/20 transition text-sm font-medium"
+                >
                   <span>Season {selectedSeason}</span>
-                  <ChevronDown className="w-4 h-4" />
+                  <ChevronDown className={`w-4 h-4 transition-transform ${isSeasonDropdownOpen ? 'rotate-180' : ''}`} />
                 </button>
                 
-                <div className="absolute right-0 top-full mt-2 w-48 bg-zinc-900 border border-white/10 rounded-xl shadow-2xl overflow-hidden opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
-                  <div className="max-h-64 overflow-y-auto hide-scrollbar">
-                    {seasons.map((s) => (
-                      <button
-                        key={s.id}
-                        onClick={() => handleSeasonChange(s.season_number)}
-                        className={`w-full text-left px-4 py-3 hover:bg-white/10 transition text-sm font-medium ${
-                          selectedSeason === s.season_number ? 'text-white bg-white/20' : 'text-gray-300'
-                        }`}
-                      >
-                        Season {s.season_number}
-                      </button>
-                    ))}
+                {isSeasonDropdownOpen && (
+                  <div className="absolute right-0 top-full mt-2 w-48 bg-zinc-900 border border-white/10 rounded-xl shadow-2xl overflow-hidden z-50">
+                    <div className="max-h-64 overflow-y-auto hide-scrollbar">
+                      {seasons.map((s) => (
+                        <button
+                          key={s.id}
+                          onClick={() => handleSeasonChange(s.season_number)}
+                          className={`w-full text-left px-4 py-3 hover:bg-white/10 transition text-sm font-medium ${
+                            selectedSeason === s.season_number ? 'text-white bg-white/20' : 'text-gray-300'
+                          }`}
+                        >
+                          Season {s.season_number}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
 
