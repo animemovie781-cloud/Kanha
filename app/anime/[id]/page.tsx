@@ -161,11 +161,11 @@ function AnimeDetailsContent() {
   };
 
   return (
-    <main className="min-h-screen bg-[#141414] text-white pb-20 md:pb-0 font-sans">
+    <main className="min-h-screen bg-[#141414] text-white pb-20 md:pb-0 font-sans pt-16">
       <Navbar />
       
       {/* Sticky Player Section */}
-      <div className="sticky top-0 z-40 bg-[#141414] w-full shadow-2xl shadow-black/50">
+      <div className="sticky top-16 z-40 bg-[#141414] w-full shadow-2xl shadow-black/50">
         {showDataWarning ? (
           <div className="w-full aspect-video bg-zinc-900 flex flex-col items-center justify-center p-4 md:p-6 text-center max-w-5xl mx-auto md:rounded-2xl overflow-hidden md:mt-4">
             <AlertTriangle className="w-10 h-10 md:w-12 md:h-12 text-yellow-500 mb-3 md:mb-4" />

@@ -30,6 +30,7 @@ export const VideoPlayer = ({ src, isEmbed, poster, autoPlay = false, onProgress
   const [showSettings, setShowSettings] = useState(false);
   const [aspectRatio, setAspectRatio] = useState('default');
   const [rotation, setRotation] = useState(0);
+  const [videoScale, setVideoScale] = useState(1);
   const controlsTimeoutRef = useRef<NodeJS.Timeout>(null);
   const [error, setError] = useState<string | null>(null);
   const [isPiPSupported, setIsPiPSupported] = useState(false);
@@ -165,11 +166,12 @@ export const VideoPlayer = ({ src, isEmbed, poster, autoPlay = false, onProgress
   };
 
   const getAspectRatioStyle = () => {
+    const baseStyle: any = { transform: `rotate(${rotation}deg) scale(${videoScale})` };
     switch (aspectRatio) {
-      case '4:3': return { objectFit: 'contain', aspectRatio: '4/3' };
-      case '16:9': return { objectFit: 'contain', aspectRatio: '16/9' };
-      case 'cover': return { objectFit: 'cover' };
-      default: return { objectFit: 'contain' };
+      case '4:3': return { ...baseStyle, objectFit: 'contain', aspectRatio: '4/3' };
+      case '16:9': return { ...baseStyle, objectFit: 'contain', aspectRatio: '16/9' };
+      case 'cover': return { ...baseStyle, objectFit: 'cover' };
+      default: return { ...baseStyle, objectFit: 'contain' };
     }
   };
 
@@ -193,16 +195,18 @@ export const VideoPlayer = ({ src, isEmbed, poster, autoPlay = false, onProgress
       onMouseMove={handleMouseMove}
       onMouseLeave={() => isPlaying && setShowControls(false)}
       onClick={() => {
-        if (!showControls) setShowControls(true);
+        if (!showControls) {
+          setShowControls(true);
+          handleMouseMove();
+        } else {
+          setShowControls(false);
+        }
       }}
     >
       <video
         ref={videoRef}
         className="w-full h-full transition-transform duration-300"
-        style={{ 
-          ...getAspectRatioStyle() as any,
-          transform: `rotate(${rotation}deg)` 
-        }}
+        style={getAspectRatioStyle()}
         poster={poster}
         onTimeUpdate={handleTimeUpdate}
         onEnded={() => setIsPlaying(false)}
@@ -235,16 +239,12 @@ export const VideoPlayer = ({ src, isEmbed, poster, autoPlay = false, onProgress
       {/* Controls Overlay */}
       <div 
         className={`absolute inset-0 bg-black/60 transition-opacity duration-300 ${showControls ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
-        onClick={() => {
-          if (!showControls) setShowControls(true);
-          else handlePlayPause();
-        }}
       >
         
         {/* Top Bar */}
         <div className="absolute top-0 left-0 right-0 p-4 flex justify-between items-center bg-gradient-to-b from-black/80 to-transparent" onClick={e => e.stopPropagation()}>
-          <button className="p-2 text-white hover:text-white/80 transition">
-            <ChevronDown className="w-6 h-6" />
+          <button onClick={() => window.history.back()} className="p-2 text-white hover:text-white/80 transition bg-black/20 rounded-full backdrop-blur-sm">
+            <ChevronDown className="w-6 h-6 md:w-8 md:h-8" />
           </button>
           <div className="flex items-center gap-4">
             <button className="text-white hover:text-white/80 transition">
@@ -253,9 +253,6 @@ export const VideoPlayer = ({ src, isEmbed, poster, autoPlay = false, onProgress
             <button className="text-white hover:text-white/80 transition">
               <MessageSquare className="w-5 h-5" />
             </button>
-            <button onClick={() => setShowSettings(!showSettings)} className="text-white hover:text-white/80 transition">
-              <Settings className="w-5 h-5" />
-            </button>
             <button className="text-white hover:text-white/80 transition">
               <MoreVertical className="w-5 h-5" />
             </button>
@@ -263,15 +260,15 @@ export const VideoPlayer = ({ src, isEmbed, poster, autoPlay = false, onProgress
         </div>
 
         {/* Center Controls */}
-        <div className="absolute inset-0 flex items-center justify-center gap-8 md:gap-12 pointer-events-none">
-          <button className="text-white hover:text-white/80 transition pointer-events-auto" onClick={e => { e.stopPropagation(); /* Skip Back Logic */ }}>
-            <SkipBack className="w-8 h-8 md:w-10 md:h-10 fill-current" />
+        <div className="absolute inset-0 flex items-center justify-center gap-10 md:gap-16 pointer-events-none">
+          <button className="text-white hover:text-white/80 transition pointer-events-auto transform hover:scale-110" onClick={e => { e.stopPropagation(); /* Skip Back Logic */ }}>
+            <SkipBack className="w-10 h-10 md:w-14 md:h-14 fill-current drop-shadow-lg" />
           </button>
-          <button onClick={(e) => { e.stopPropagation(); handlePlayPause(); }} className="text-white hover:text-white/80 transition pointer-events-auto">
-            {isPlaying ? <Pause className="w-12 h-12 md:w-16 md:h-16 fill-current" /> : <Play className="w-12 h-12 md:w-16 md:h-16 fill-current" />}
+          <button onClick={(e) => { e.stopPropagation(); handlePlayPause(); }} className="text-white hover:text-white/80 transition pointer-events-auto transform hover:scale-110">
+            {isPlaying ? <Pause className="w-16 h-16 md:w-20 md:h-20 fill-current drop-shadow-lg" /> : <Play className="w-16 h-16 md:w-20 md:h-20 fill-current drop-shadow-lg" />}
           </button>
-          <button className="text-white hover:text-white/80 transition pointer-events-auto" onClick={e => { e.stopPropagation(); /* Skip Forward Logic */ }}>
-            <SkipForward className="w-8 h-8 md:w-10 md:h-10 fill-current" />
+          <button className="text-white hover:text-white/80 transition pointer-events-auto transform hover:scale-110" onClick={e => { e.stopPropagation(); /* Skip Forward Logic */ }}>
+            <SkipForward className="w-10 h-10 md:w-14 md:h-14 fill-current drop-shadow-lg" />
           </button>
         </div>
 
@@ -282,24 +279,74 @@ export const VideoPlayer = ({ src, isEmbed, poster, autoPlay = false, onProgress
             <div className="flex items-center gap-4 text-white">
               <span className="text-xs font-medium">{formatTime(currentTime)} / {formatTime(duration)}</span>
             </div>
-            <button onClick={toggleFullscreen} className="text-white hover:text-white/80 transition p-2">
-              {isFullscreen ? <Minimize className="w-5 h-5" /> : <Maximize className="w-5 h-5" />}
-            </button>
+            <div className="flex items-center gap-2 relative">
+              <button onClick={(e) => { e.stopPropagation(); setShowSettings(!showSettings); }} className="text-white hover:text-white/80 transition p-2">
+                <Settings className="w-5 h-5" />
+              </button>
+              <button onClick={(e) => { e.stopPropagation(); toggleFullscreen(); }} className="text-white hover:text-white/80 transition p-2">
+                {isFullscreen ? <Minimize className="w-5 h-5" /> : <Maximize className="w-5 h-5" />}
+              </button>
+
+              {/* Settings Modal */}
+              {showSettings && (
+                <div className="absolute bottom-full right-0 mb-4 bg-black/95 backdrop-blur-md border border-white/10 rounded-xl p-4 w-64 z-50 shadow-2xl" onClick={e => e.stopPropagation()}>
+                  <div className="flex items-center justify-between mb-4 border-b border-white/10 pb-2">
+                    <h3 className="text-white font-semibold text-sm">Display Settings</h3>
+                    <button onClick={() => setShowSettings(false)} className="text-gray-400 hover:text-white">
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <label className="text-xs text-gray-400 block mb-2">Aspect Ratio</label>
+                      <div className="grid grid-cols-2 gap-2">
+                        {['default', '4:3', '16:9', 'cover'].map(ratio => (
+                          <button
+                            key={ratio}
+                            onClick={() => setAspectRatio(ratio)}
+                            className={`py-1.5 px-2 text-xs rounded border capitalize ${aspectRatio === ratio ? 'bg-[#E50914] text-white border-[#E50914]' : 'border-white/20 text-white hover:bg-white/10'}`}
+                          >
+                            {ratio}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="text-xs text-gray-400 block mb-2">Scale / Zoom</label>
+                      <div className="flex items-center gap-2">
+                        <input 
+                          type="range" 
+                          min="0.5" 
+                          max="2" 
+                          step="0.1" 
+                          value={videoScale} 
+                          onChange={(e) => setVideoScale(parseFloat(e.target.value))}
+                          className="w-full accent-[#E50914]"
+                        />
+                        <span className="text-xs text-white w-10 text-right">{Math.round(videoScale * 100)}%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Progress Bar */}
           <div className="px-4 pb-2">
-            <div className="relative w-full h-1 bg-white/30 cursor-pointer group" onClick={(e) => {
+            <div className="relative w-full h-1.5 md:h-2 bg-white/30 cursor-pointer group rounded-full" onClick={(e) => {
               const rect = e.currentTarget.getBoundingClientRect();
               const pos = (e.clientX - rect.left) / rect.width;
               if (videoRef.current) {
                 videoRef.current.currentTime = pos * videoRef.current.duration;
               }
             }}>
-              <div className="absolute top-0 left-0 h-full bg-red-600" style={{ width: `${progress}%` }} />
+              <div className="absolute top-0 left-0 h-full bg-[#E50914] rounded-full" style={{ width: `${progress}%` }} />
               <div 
-                className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-red-600 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" 
-                style={{ left: `calc(${progress}% - 6px)` }} 
+                className="absolute top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 bg-[#E50914] rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-lg" 
+                style={{ left: `calc(${progress}% - 8px)` }} 
               />
             </div>
           </div>
@@ -328,48 +375,6 @@ export const VideoPlayer = ({ src, isEmbed, poster, autoPlay = false, onProgress
         </div>
       </div>
 
-      {/* Settings Modal */}
-      {showSettings && (
-        <div className="absolute right-4 top-16 bg-black/90 backdrop-blur-md border border-white/10 rounded-xl p-4 w-64 z-50">
-          <div className="flex items-center justify-between mb-4 border-b border-white/10 pb-2">
-            <h3 className="text-white font-semibold">Video Settings</h3>
-            <button onClick={() => setShowSettings(false)} className="text-gray-400 hover:text-white">
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-          
-          <div className="space-y-4">
-            <div>
-              <label className="text-xs text-gray-400 block mb-2">Aspect Ratio</label>
-              <select 
-                value={aspectRatio}
-                onChange={(e) => setAspectRatio(e.target.value)}
-                className="w-full bg-white/10 border border-white/20 rounded-lg p-2 text-sm text-white outline-none focus:border-[#E50914]"
-              >
-                <option value="default">Default</option>
-                <option value="4:3">4:3</option>
-                <option value="16:9">16:9</option>
-                <option value="cover">Cover</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="text-xs text-gray-400 block mb-2">Rotation</label>
-              <div className="grid grid-cols-4 gap-2">
-                {[0, 90, 180, 270].map(deg => (
-                  <button
-                    key={deg}
-                    onClick={() => setRotation(deg)}
-                    className={`p-1 text-xs rounded border ${rotation === deg ? 'bg-[#E50914] text-white border-[#E50914]' : 'border-white/20 text-white hover:bg-white/10'}`}
-                  >
-                    {deg}°
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
